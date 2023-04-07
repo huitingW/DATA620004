@@ -4,16 +4,16 @@ import matplotlib.pyplot as plt
 import model as mo
 
 if __name__ == '__main__':
-    np.random.seed(666)
+    np.random.seed(111)
     file = 'model_params'
     
     x_train, y_train = mo.load_mnist('./mnist/', kind='train', onehot= True)
     x_test, y_test = mo.load_mnist('./mnist', kind='t10k', onehot= True)
 
-    train_dataloader = mo.MyDataLoader(x_train, y_train, batch_size=256, drop_last=True)
+    train_dataloader = mo.DataLoader(x_train, y_train, batch_size=256, drop_last=True)
 
     network = mo.TwoLayerNet(input_size=784, hidden_size=512, output_size=10, 
-                             learning_rate = 1e-3, reg = 0.1)
+                             learning_rate = 1e-3, reg = 0)
     
     train_loss_list = []
     train_acc_list = []

@@ -214,37 +214,37 @@ class TwoLayerNet:
         self.layers['Affine2'] = Affine(self.params['W2'], self.params['b2'])
         return
     
-class MyDataLoader:
-    def __init__(self, data, label, batch_size, drop_last=False):
-        self.data = data
-        self.label = label
+class DataLoader:
+    def __init__(self, X, y, batch_size, drop_last=False):
+        self.X = X
+        self.y = y
         self.batch_size = batch_size
 
-        nums = data.shape[0]
-        a = [i for i in range(nums)]
-        random.shuffle(a)
+        n = X.shape[0]
+        idx = [i for i in range(n)]
+        random.shuffle(idx)
 
-        self.sampler = a
+        self.idx = idx
         self.drop_last = drop_last
 
     def __getitem__(self, index):
-        return self.data[index], self.label[index]
+        return self.X[index], self.y[index]
 
     def __len__(self):
-        return self.data.shape[0]
+        return self.X.shape[0]
 
     def __iter__(self):
-        batch_index = []
-        for index in self.sampler:
-            batch_index.append(index)
-            if len(batch_index) == self.batch_size:
-                yield self.data[batch_index], self.label[batch_index]
-                batch_index = []
-        if len(batch_index) > 0 and not self.drop_last:
+        batch_idx = []
+        for index in self.idx:
+            batch_idx.append(index)
+            if len(batch_idx) == self.batch_size:
+                yield self.X[batch_idx], self.y[batch_idx]
+                batch_idx = []
+        if len(batch_idx) > 0 and not self.drop_last:
             # 如果最后剩余的数据不够一个batch_size,根据参数决定是否 drop out
-            yield self.data[batch_index], self.label[batch_index]
-        # 每一个epoch后洗牌一次
-        random.shuffle(self.sampler)
+            yield self.X[batch_idx], self.y[batch_idx]
+        # 再次洗牌
+        random.shuffle(self.idx)
 
 # 导入数据
 def one_hot(y, n_classes):
